@@ -1,36 +1,27 @@
-\# Lab 1 – Requirements Engineering \& UML Use-Case Modelling
+---
 
+# Lab 2 – Agile Software Development & Project Management
 
+Name: Rohith Karning
 
-Name: Rohith Karning  
+SRN: PES1UG24AM229
 
-SRN: PES1UG24AM229  
+Lab: Lab 2
 
-Lab: Lab 1  
+## Submission Contents
 
-Problem Statement: #39 – Second-Hand Product Escrow Marketplace
+The `Lab-2` folder contains the work completed for Lab 2 using Jira for Agile project management.
 
+## Deliverables
 
+- Jira project setup
+- Product backlog / user stories
+- Sprint planning
+- Sprint execution
+- Sprint tracking
+- Burndown Chart
+- Screenshots and supporting submission files
 
-\## Submission Contents
+## Lab 2 Files
 
-
-
-\- `PES1UG24AM229\_\_SE\_LAB.docx` – Complete Lab 1 submission.
-
-\- `UML\_Use\_Case\_Diagram.png` – UML use-case diagram.
-
-\- `39\_SE\_Lab1\_SE\_Problem\_Statements.pdf` – Lab problem statement.
-
-
-
-\## Deliverables
-
-
-
-\- Requirements Table
-
-\- UML Use-Case Diagram
-
-\- Use-Case Flow Specification
-
+All Lab 2 files and supporting materials are available in the `Lab-2` folder.
