@@ -6,6 +6,8 @@ from .target import Target
 
 WHITE = (255, 255, 255)
 RED = (220, 60, 60)
+LIGHT_GRAY = (180, 180, 190)
+OVERLAY = (0, 0, 0, 180)
 
 class GameEngine:
     def __init__(self, width, height):
@@ -23,7 +25,9 @@ class GameEngine:
         self.misses = 0
         self.score = 0
         self.font = pygame.font.SysFont("Arial", 26)
+        self.big_font = pygame.font.SysFont("Arial", 56, bold=True)
         self.game_over = False
+        self.quit_requested = False  # set on the Game Over screen; main.py exits
 
     def _spawn_target(self):
         x = random.randint(self.margin, self.width - self.margin)
@@ -32,6 +36,9 @@ class GameEngine:
 
     def handle_event(self, event):
         if self.game_over:
+            # Wait on the Game Over screen; clicks are ignored.
+            if event.type == pygame.KEYDOWN and event.key in (pygame.K_q, pygame.K_ESCAPE):
+                self.quit_requested = True
             return
         if event.type == pygame.MOUSEBUTTONDOWN:
             self._handle_click(event.pos)
@@ -71,9 +78,10 @@ class GameEngine:
         return round(100 * self.hits / total, 1)
 
     def render(self, screen):
-        r = self.target.drawn_radius()
-        pygame.draw.circle(screen, RED, (self.target.x, self.target.y), r)
-        pygame.draw.circle(screen, WHITE, (self.target.x, self.target.y), r, 2)
+        if not self.game_over:
+            r = self.target.drawn_radius()
+            pygame.draw.circle(screen, RED, (self.target.x, self.target.y), r)
+            pygame.draw.circle(screen, WHITE, (self.target.x, self.target.y), r, 2)
 
         score_text = self.font.render(f"Score: {self.score}", True, WHITE)
         screen.blit(score_text, (10, 10))
@@ -85,7 +93,24 @@ class GameEngine:
         acc_text = self.font.render(f"Accuracy: {self.accuracy()}%", True, WHITE)
         screen.blit(acc_text, (self.width // 2 - 90, 10))
 
-        if self.game_over and not getattr(self, "_game_over_logged", False):
-            # NOTE: no proper game-over screen yet - see Task 2 in the README.
-            print(f"Time's up! Final score: {self.score}  Accuracy: {self.accuracy()}%")
-            self._game_over_logged = True
+        if self.game_over:
+            self._render_game_over(screen)
+
+    def _render_game_over(self, screen):
+        # Dim the playfield, then show the final results centered on screen.
+        overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        overlay.fill(OVERLAY)
+        screen.blit(overlay, (0, 0))
+
+        lines = [
+            (self.big_font, "Time's Up!", WHITE),
+            (self.font, f"Final Score: {self.score}", WHITE),
+            (self.font, f"Accuracy: {self.accuracy()}%", WHITE),
+            (self.font, f"Hits: {self.hits}   Misses: {self.misses}", LIGHT_GRAY),
+            (self.font, "Press Q or Esc to quit", LIGHT_GRAY),
+        ]
+        y = self.height // 2 - 120
+        for font, text, color in lines:
+            surf = font.render(text, True, color)
+            screen.blit(surf, surf.get_rect(midtop=(self.width // 2, y)))
+            y += surf.get_height() + 16
