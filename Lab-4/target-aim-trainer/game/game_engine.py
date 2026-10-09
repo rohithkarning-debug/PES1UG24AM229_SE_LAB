@@ -71,7 +71,7 @@ class GameEngine:
         return round(100 * self.hits / total, 1)
 
     def render(self, screen):
-        r = int(self.target.visual_radius())
+        r = self.target.drawn_radius()
         pygame.draw.circle(screen, RED, (self.target.x, self.target.y), r)
         pygame.draw.circle(screen, WHITE, (self.target.x, self.target.y), r, 2)
 

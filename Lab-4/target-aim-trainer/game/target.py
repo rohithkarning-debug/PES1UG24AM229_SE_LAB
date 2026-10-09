@@ -21,11 +21,14 @@ class Target:
         t = min(1.0, self.age / self.lifespan_frames)
         return self.base_radius - (self.base_radius - self.min_radius) * t
 
+    def drawn_radius(self):
+        # The whole-pixel radius actually drawn on screen. Both render()
+        # and contains_point() use this so the clickable area always
+        # matches the visible circle.
+        return int(self.visual_radius())
+
     def contains_point(self, x, y):
-        # NOTE: hit-testing always uses the target's starting radius
-        # (base_radius), not its current, shrunken on-screen radius
-        # (visual_radius()). The circle drawn in render() shrinks as
-        # the target ages, but the clickable area never does, so a
-        # late click well outside the small visible circle can still
-        # register as a hit. See Task 1 in the README.
-        return math.hypot(self.x - x, self.y - y) <= self.base_radius
+        # Hit-test against the current, shrunken on-screen radius rather
+        # than the starting radius, so late clicks outside the visible
+        # circle count as misses.
+        return math.hypot(self.x - x, self.y - y) <= self.drawn_radius()
