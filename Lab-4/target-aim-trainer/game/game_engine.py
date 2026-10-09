@@ -1,6 +1,7 @@
 import pygame
 import random
 from .target import Target
+from .sounds import Sounds
 
 # Game Engine
 
@@ -35,6 +36,7 @@ class GameEngine:
         self.font = pygame.font.SysFont("Arial", 26)
         self.big_font = pygame.font.SysFont("Arial", 56, bold=True)
         self.quit_requested = False  # set on the Game Over screen; main.py exits
+        self.sounds = Sounds()
 
         self.reset(difficulty)
 
@@ -72,8 +74,10 @@ class GameEngine:
             self.hits += 1
             self.score += 1
             self.target = self._spawn_target()
+            self.sounds.play("hit")
         else:
             self.misses += 1
+            self.sounds.play("miss")
 
     def handle_input(self):
         # Reserved for continuously-held-key input; this game is
@@ -87,12 +91,14 @@ class GameEngine:
         self.time_left_frames -= 1
         if self.time_left_frames <= 0:
             self.game_over = True
+            self.sounds.play("round_end")
             return
 
         self.target.update()
         if self.target.expired():
             self.misses += 1  # letting a target time out counts as a miss too
             self.target = self._spawn_target()
+            self.sounds.play("miss")
 
     def accuracy(self):
         total = self.hits + self.misses
