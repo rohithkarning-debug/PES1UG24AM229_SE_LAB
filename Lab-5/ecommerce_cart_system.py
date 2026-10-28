@@ -1,7 +1,6 @@
 import hashlib
 import os
 import secrets
-import math
 
 cart_items = {
     "ITEM1": {"name": "Wireless Mouse", "price": 25.0, "qty": 2},
@@ -31,8 +30,7 @@ def removeItemFromCart(item_id):
 
 
 def checkCartStatus(item_id):
-    handling_fee = 4.50
-    if cart_items.get(item_id) == None:
+    if cart_items.get(item_id) is None:
         return False
     if cart_items[item_id]["qty"] > 0:
         return True
